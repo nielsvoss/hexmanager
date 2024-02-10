@@ -83,7 +83,7 @@ local function corresponding_terminator(s)
   end
 end
 
-function tokens_to_ast_aux(tokens, start_index, terminator)
+local function tokens_to_ast_aux(tokens, start_index, terminator)
   local nodes = {}
   local i = start_index
   while i <= #tokens do
@@ -94,19 +94,18 @@ function tokens_to_ast_aux(tokens, start_index, terminator)
       else
         error("Incorrect type of closing bracket")
       end
-    end
-    
-    if token == '[' or token == '{' then
-      local captured_nodes, index_of_terminator = tokens_to_ast_aux(tokens, i + 1, corresponding_terminator(token))
+    elseif token == '[' or token == '{' then
+      local captured_nodes, index_of_terminator =
+        tokens_to_ast_aux(tokens, i + 1, corresponding_terminator(token))
       table.insert(nodes, {
         token_type = 'list',
         delimiter = token,
         elements = captured_nodes
       })
       i = index_of_terminator
+    else
+      table.insert(nodes, non_bracket_token_to_node(token))
     end
-
-    table.insert(nodes, non_bracket_token_to_node(token))
 
     i = i + 1
   end
@@ -119,7 +118,7 @@ function tokens_to_ast_aux(tokens, start_index, terminator)
 end
 
 local function tokens_to_ast(tokens)
-    
+  return tokens_to_ast_aux(tokens, 1, nil)
 end
 
 local sample = [[
@@ -127,4 +126,5 @@ The quick brown fox // this is a comment
 Jumps; Over { the; Lazy; Dog }
 ]]
 
-print_table(tokens_to_ast_aux({"asdf", "fbaw", "{", "a", "}", "- qwerty"}, 1, nil))
+local ast = tokens_to_ast(tokenize(sample))
+print_table(ast)
