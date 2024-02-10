@@ -28,12 +28,12 @@ function HexParsing.tokenize(text)
         end
 
         for segment in string.gmatch(line, "[^;]+") do
-            local bracket_index = string.find(segment, "[{}]")
+            local bracket_index = string.find(segment, "[{}%[%]]")
             while bracket_index do
                 insert_trimmed_if_nonempty(tokens, string.sub(segment, 1, bracket_index - 1))
                 table.insert(tokens, string.sub(segment, bracket_index, bracket_index))
                 segment = string.sub(segment, bracket_index + 1)
-                bracket_index = string.find(segment, "[{}]")
+                bracket_index = string.find(segment, "[{}%[%]]")
             end
             insert_trimmed_if_nonempty(tokens, segment)
         end
