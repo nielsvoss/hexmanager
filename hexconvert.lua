@@ -57,9 +57,28 @@ local function print_table(o)
   print(table_to_string(o))
 end
 
+local function non_bracket_token_to_ast(token)
+  if string.match(token, "^-") then
+    local _, _, remaining = string.find(token, "-(.*)")
+    return {
+      token_type = 'nonpattern',
+      value = trim(remaining)
+    }
+  else
+    return {
+      token_type = 'pattern',
+      value = trim(token)
+    }
+  end
+end
+
+local function tokens_to_ast(tokens)
+    
+end
+
 local sample = [[
 The quick brown fox // this is a comment
 Jumps; Over { the; Lazy; Dog }
 ]]
 
-print_table(tokenize(sample))
+print_table(non_bracket_token_to_ast("- asdf"))
