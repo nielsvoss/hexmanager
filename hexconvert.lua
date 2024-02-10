@@ -10,6 +10,13 @@ local function trim(s)
   return string.sub(s, l, r)
 end
 
+local function insert_trimmed_if_nonempty(t, str)
+  local str_trimmed = trim(str)
+  if str_trimmed ~= "" then
+    table.insert(t, str_trimmed)
+  end
+end
+
 local function tokenize(text)
     local tokens = {}
     for line in string.gmatch(text, "[^\n]+") do
@@ -21,15 +28,33 @@ local function tokenize(text)
         for segment in string.gmatch(line, "[^;]+") do
             local bracket_index = string.find(segment, "[{}]")
             while bracket_index do
-                table.insert(tokens, trim(string.sub(segment, 1, bracket_index - 1)))
+                insert_trimmed_if_nonempty(tokens, string.sub(segment, 1, bracket_index - 1))
                 table.insert(tokens, string.sub(segment, bracket_index, bracket_index))
                 segment = string.sub(segment, bracket_index + 1)
                 bracket_index = string.find(segment, "[{}]")
             end
-            table.insert(tokens, trim(segment))
+            insert_trimmed_if_nonempty(tokens, segment)
         end
     end
     return tokens
+end
+
+-- https://stackoverflow.com/a/27028488
+local function table_to_string(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. table_to_string(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
+
+local function print_table(o)
+  print(table_to_string(o))
 end
 
 local sample = [[
@@ -37,4 +62,4 @@ The quick brown fox // this is a comment
 Jumps; Over { the; Lazy; Dog }
 ]]
 
-print(table.concat(tokenize(sample), ", "))
+print_table(tokenize(sample))
