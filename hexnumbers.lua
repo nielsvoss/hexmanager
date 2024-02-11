@@ -1,12 +1,39 @@
 HexNumbers = {}
 
 local number_table = {
+    -- TODO: Remove negatives from the table and just flip the first 4 angles on positives
+    ['-2'] = 'deddwa',
     ['-1'] = 'deddw',
+    ['-1/2'] = 'deddwd',
     ['0'] = 'aqaa',
     ['1/4'] = 'aqaawdd',
     ['1/2'] = 'aqaawd',
+    ['3/4'] = 'aqaawdwd',
     ['1'] = 'aqaaw',
+    ['67/40'] = 'aqaawdwqdd', -- Between player sneak and standing height
     ['2'] = 'aqaawa',
+    ['3'] = 'aqaaedwd',
+    ['4'] = 'aqaawaa',
+    ['5'] = 'aqaaq',
+    ['6'] = 'aqaaedw',
+    ['7'] = 'aqaawaq',
+    ['8'] = 'aqaawaqw',
+    ['9'] = 'aqaawaaq',
+    ['10'] = 'aqaae',
+    ['11'] = 'aqaaqaw',
+    ['12'] = 'aqaaqwa',
+    ['13'] = 'aqaawqaw',
+    ['14'] = 'aqaawaaqq',
+    ['15'] = 'aqaaedaq',
+    ['16'] = 'aqaaqawq',
+    ['17'] = 'aqaaqwaq',
+    ['18'] = 'aqaawaaqa',
+    ['19'] = 'aqaawaaqe',
+    ['20'] = 'aqaaee',
+    ['30'] = 'aqaaeaqq',
+    ['40'] = 'aqaaqqaa',
+    ['50'] = 'aqaaeaqa',
+    ['100'] = 'aqaaeaqaa',
 }
 
 function HexNumbers.get_angles(number_as_string)
