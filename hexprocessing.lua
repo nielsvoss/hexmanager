@@ -1,4 +1,5 @@
 require('hexpatterns')
+require('hexnumbers')
 
 HexProcessing = {}
 
@@ -86,6 +87,17 @@ function HexProcessing.process_pattern(symbol)
     local angles_res, _, angles = string.find(symbol, "%(([%w_]*)%)$")
     if angles_res then
         return parse_angles(angles)
+    end
+
+    local number_string = string.match(symbol, "Numerical Reflection: (.*)$") or
+        string.match(symbol, "number: (.*)$")
+    if number_string then
+        local number_pattern = HexNumbers.get_pattern(number_string)
+        if number_pattern then
+            return number_pattern
+        else
+            error('Number "'..number_string..'" not available in quick-reference table, must enter manually')
+        end
     end
 
     local pattern = HexPatterns.from_name(symbol)
