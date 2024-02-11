@@ -38,12 +38,3 @@ function HexConvert.decompile_to_lines(iota)
       return HexDecode.decode_iotas(iota)
    end
 end
-
-local sample = [[
-- 2
-- 25; - "The quick brown fox"
-{ - null; - null }
-Scribe's Reflection
-]]
-
---print_table(HexConvert.compile(sample))
