@@ -25,6 +25,19 @@ function HexPatterns.from_translation(name)
     return nil
 end
 
+function HexPatterns.from_short_name(name)
+    for _,pattern in ipairs(pattern_table) do
+        if pattern.name == name then
+            return pattern
+        end
+    end
+    return nil
+end
+
+function HexPatterns.from_name(name)
+    return HexPatterns.from_translation(name) or HexPatterns.from_short_name(name)
+end
+
 function HexPatterns.is_dynamic(pattern)
     -- The == 'true' is necessary because pattern.is_great is a string and is still true when 'false'
     return pattern.is_great == 'true' or pattern.pattern == ''

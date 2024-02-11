@@ -88,7 +88,7 @@ function HexProcessing.process_pattern(symbol)
         return parse_angles(angles)
     end
 
-    local pattern = HexPatterns.from_translation(symbol)
+    local pattern = HexPatterns.from_name(symbol)
     if not pattern then
         error('Unknown pattern "'..symbol..'"')
     end
