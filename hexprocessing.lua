@@ -51,6 +51,48 @@ function HexProcessing.process_nonpattern(symbol)
     error("Unknown nonpattern symbol")
 end
 
+local function bookkeepers_gambit_angles(code)
+    if string.len(code) == 0 then error("Code needs at least one character") end
+    local last_index_was_bend = false
+    local angles = ""
+    for c in code:gmatch('.') do
+        if c == '-' then
+            if last_index_was_bend then
+                angles = angles..'e'
+            else
+                angles = angles..'w'
+            end
+            last_index_was_bend = false
+        elseif c == 'v' then
+            if last_index_was_bend then
+                angles = angles..'da'
+            else
+                angles = angles..'ea'
+            end
+            last_index_was_bend = true
+        else
+            error("Invalid character in code")
+        end
+    end
+
+    return string.sub(angles, 2)
+end
+
+local function bookkeepers_gambit_pattern(code)
+    if string.len(code) == 0 then error("Code needs at least one character") end
+
+    local angles = bookkeepers_gambit_angles(code)
+    local startDir = "EAST"
+    if code:sub(1,1) == 'v' then
+        startDir = "SOUTH_EAST"
+    end
+
+    return {
+        angles = angles,
+        startDir = startDir
+    }
+end
+
 local valid_angles = {
     ["EAST"] = true,
     ["NORTH_EAST"] = true,
@@ -98,6 +140,12 @@ function HexProcessing.process_pattern(symbol)
         else
             error('Number "'..number_string..'" not available in quick-reference table, must enter manually')
         end
+    end
+
+    local bookkeepers_gambit = symbol:match("Bookkeeper's Gambit: ([-v]+)$") or
+        symbol:match("mask: ([-v]+)")
+    if bookkeepers_gambit then
+        return bookkeepers_gambit_pattern(bookkeepers_gambit)
     end
 
     local pattern = HexPatterns.from_name(symbol)
