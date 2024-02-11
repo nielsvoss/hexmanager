@@ -38,3 +38,7 @@ function HexConvert.decompile_to_lines(iota)
       return HexDecode.decode_iotas(iota)
    end
 end
+
+function HexConvert.decompile(iota)
+   return table.concat(HexConvert.decompile_to_lines(iota), "\n")
+end
