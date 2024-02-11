@@ -12,5 +12,10 @@ function HexDecode.decode_pattern(pattern)
             return pattern.translation
         end
     end
+
+    if angles:match("^aqaa") or angles:match("^dedd") then
+       return 'Numerical Reflection ('..angles..')'
+    end
+
     return 'Unknown ('..angles..')'
 end
