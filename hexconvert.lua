@@ -1,4 +1,7 @@
 require('hexparsing')
+require('hexprocessing')
+
+HexConvert = {}
 
 -- https://stackoverflow.com/a/27028488
 local function table_to_string(o)
@@ -18,10 +21,18 @@ local function print_table(o)
   print(table_to_string(o))
 end
 
+function HexConvert.compile(s)
+   local tokens = HexParsing.tokenize(s)
+   local ast = HexParsing.tokens_to_ast(tokens)
+   local iotas = HexProcessing.process(ast)
+   return iotas
+end
+
 local sample = [[
-The quick brown fox // this is a comment
-Jumps; Over { the; Lazy; Dog }
+- 2
+- 25; - "The quick brown fox"
+{ - null; - null }
+Scribe's Reflection
 ]]
 
-local ast = HexParsing.tokens_to_ast(HexParsing.tokenize(sample))
-print_table(ast)
+--print_table(HexConvert.compile(sample))
