@@ -1,3 +1,5 @@
+require('hexpatterns')
+
 HexProcessing = {}
 
 function HexProcessing.process_nonpattern(symbol)
@@ -85,4 +87,18 @@ function HexProcessing.process_pattern(symbol)
     if angles_res then
         return parse_angles(angles)
     end
+
+    local pattern = HexPatterns.from_translation(symbol)
+    if not pattern then
+        error('Unknown pattern "'..symbol..'"')
+    end
+
+    if HexPatterns.is_dynamic(pattern) then
+        error('Pattern "'..symbol..'" requires the angles to be explicitly specified')
+    end
+
+    return {
+        startDir = pattern.direction,
+        angles = pattern.pattern
+    }
 end
