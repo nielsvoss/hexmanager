@@ -50,19 +50,38 @@ function HexDecode.decode_nonlist(iota)
     end
 end
 
-function HexDecode.decode_iotas(iotas)
+local function decode_iotas_aux(iotas, indentation_level)
     local lines = {}
     for _,iota in ipairs(iotas) do
+        local indentation = string.rep(' ', 4 * indentation_level)
+
         -- Check if iota is a list
         if type(iota) == 'table' and (iota == {} or iota[1]) then
-            table.insert(lines, '[')
-            for _,line in ipairs(HexDecode.decode_iotas(iota)) do
-                table.insert(lines, "    "..line)
+            table.insert(lines, indentation..'[')
+            for _,line in ipairs(decode_iotas_aux(iota, indentation_level + 1)) do
+                table.insert(lines, line)
             end
-            table.insert(lines, ']')
+            table.insert(lines, indentation..']')
         else
-            table.insert(lines, HexDecode.decode_nonlist(iota))
+            local decoded = HexDecode.decode_nonlist(iota)
+            if decoded == 'Introspection' then
+                table.insert(lines, indentation..'{')
+                indentation_level = indentation_level + 1
+            elseif decoded == 'Retrospection' then
+                if indentation_level > 0 then
+                    indentation_level = indentation_level - 1
+                end
+                indentation = string.rep(' ', 4 * indentation_level)
+                table.insert(lines, indentation..'}')
+            else
+                table.insert(lines, indentation..decoded)
+            end
         end
     end
     return lines
+end
+
+
+function HexDecode.decode_iotas(iotas)
+   return decode_iotas_aux(iotas, 0)
 end
