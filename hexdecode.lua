@@ -28,7 +28,7 @@ function HexDecode.decode_nonlist(iota)
     elseif type(iota) == 'string' then
         return '- "'..iota..'"'
     elseif iota.angles then
-       return HexDecode.decode_iota(iota)
+       return HexDecode.decode_pattern(iota)
     elseif iota.null then
         return "- null"
     elseif iota.garbage then
@@ -48,4 +48,21 @@ function HexDecode.decode_nonlist(iota)
     else
         return '- garbage // Unrecognized Iota Type'
     end
+end
+
+function HexDecode.decode_iotas(iotas)
+    local lines = {}
+    for _,iota in ipairs(iotas) do
+        -- Check if iota is a list
+        if type(iota) == 'table' and (iota == {} or iota[1]) then
+            table.insert(lines, '[')
+            for _,line in ipairs(HexDecode.decode_iotas(iota)) do
+                table.insert(lines, "    "..line)
+            end
+            table.insert(lines, ']')
+        else
+            table.insert(lines, HexDecode.decode_nonlist(iota))
+        end
+    end
+    return lines
 end
