@@ -47,3 +47,42 @@ function HexProcessing.process_nonpattern(symbol)
 
     error("Unknown nonpattern symbol")
 end
+
+local valid_angles = {
+    ["EAST"] = true,
+    ["NORTH_EAST"] = true,
+    ["NORTH_WEST"] = true,
+    ["WEST"] = true,
+    ["SOUTH_WEST"] = true,
+    ["SOUTH_EAST"] = true
+}
+
+local function parse_angles(text)
+    -- Check if both the angles and starting direction are specified
+    local startDir_with_angles_res, _, startDir, angles1 = string.find(text, "^(%u+)_([aqwed]*)$")
+    if startDir_with_angles_res then
+        if not valid_angles[startDir] then error("Invalid direction "..startDir) end
+        return {
+            startDir = startDir,
+            angles = angles1
+        }
+    end
+
+    local angles_res, _, angles2 = string.find(text, "^([aqwed]*)$")
+    if angles_res then
+        return {
+            startDir = "EAST",
+            angles = angles2
+        }
+    end
+
+    error("Failed to parse angles")
+end
+
+function HexProcessing.process_pattern(symbol)
+    -- Check if pattern angles are specified explicitly
+    local angles_res, _, angles = string.find(symbol, "%(([%w_]*)%)$")
+    if angles_res then
+        return parse_angles(angles)
+    end
+end
