@@ -4,7 +4,11 @@ local csv = require("packages/csv")
 local parameters = {
     header = true
 }
-local f = csv.open("data/patterns.csv", parameters)
+
+-- This code to find the script location is necessary because ComputerCraft uses absolute paths
+local path_to_script = debug.getinfo(1).source
+local directory_containing_script = string.match(path_to_script, "^@(.*)[/\\].*%.lua$")
+local f = csv.open(directory_containing_script.."/data/patterns.csv", parameters)
 assert(f ~= nil)
 
 local pattern_table = {}
