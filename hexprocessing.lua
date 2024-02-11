@@ -102,3 +102,29 @@ function HexProcessing.process_pattern(symbol)
         angles = pattern.pattern
     }
 end
+
+function HexProcessing.process(nodes)
+    local iotas = {}
+    for _,node in ipairs(nodes) do
+        if node.token_type == 'pattern' then
+            table.insert(iotas, HexProcessing.process_pattern(node.value))
+        elseif node.token_type == 'nonpattern' then
+            table.insert(iotas, HexProcessing.process_nonpattern(node.value))
+        elseif node.token_type == 'list' then
+            if node.delimiter == '[' then
+                table.insert(iotas, HexProcessing.process(node.elements))
+            elseif node.delimiter == '{' then
+                table.insert(iotas, HexProcessing.process_pattern("Introspection"))
+                for _,iota in ipairs(HexProcessing.process(node.elements)) do
+                    table.insert(iotas, iota)
+                end
+                table.insert(iotas, HexProcessing.process_pattern("Retrospection"))
+            else
+                error("Unknown list delimiter")
+            end
+        else
+            error("Unknown node type")
+        end
+    end
+    return iotas
+end
