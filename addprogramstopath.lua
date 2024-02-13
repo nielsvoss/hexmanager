@@ -1,4 +1,4 @@
-local path = "/hexconvert/programs"
+local path = "/hexmanager/programs"
 if  shell.path():match(path) then
     print("Shell path already contains "..path)
 else
