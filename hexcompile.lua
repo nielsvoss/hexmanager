@@ -1,3 +1,7 @@
+local path_to_script = debug.getinfo(1).source
+local dir_containing_script = path_to_script:match("^@(.*)[/\\].*%.lua$")
+package.path = package.path..";"..dir_containing_script.."/?.lua"
+
 require('hexconvert')
 
 local args = {...}
