@@ -3,6 +3,15 @@ require('hexnumbers')
 
 HexProcessing = {}
 
+local function try_parse_function_call_syntax(text, name)
+    local res, _, str = string.find(text, "^"..name.."%((.*)%)$")
+    if res then
+        return str
+    else
+        return nil
+    end
+end
+
 local function try_parse_vector_iota(text)
     local vector_res, _, x_str, y_str, z_str =
         string.find(text, "^%<([%-%.%w]*),%s*([%-%.%w]*),%s*([%-%.%w]*)%>$")
@@ -45,6 +54,13 @@ function HexProcessing.process_nonpattern(symbol)
         return true
     elseif symbol == 'false' then
         return false
+    end
+
+    local entity_type = try_parse_function_call_syntax(symbol, "entity_type")
+    if entity_type then
+        return {
+            entityType = entity_type
+        }
     end
 
     local asnumber = tonumber(symbol)
