@@ -5,7 +5,7 @@ HexProcessing = {}
 
 local function try_parse_vector_iota(text)
     local vector_res, _, x_str, y_str, z_str =
-        string.find(text, "%<([%-%.%w]*),%s*([%-%.%w]*),%s*([%-%.%w]*)%>")
+        string.find(text, "^%<([%-%.%w]*),%s*([%-%.%w]*),%s*([%-%.%w]*)%>$")
     if vector_res then
         local x = tonumber(x_str)
         local y = tonumber(y_str)
