@@ -56,10 +56,24 @@ function HexProcessing.process_nonpattern(symbol)
         return false
     end
 
+    local iota_type = try_parse_function_call_syntax(symbol, "iota_type")
+    if iota_type then
+        return {
+            iotaType = iota_type
+        }
+    end
+
     local entity_type = try_parse_function_call_syntax(symbol, "entity_type")
     if entity_type then
         return {
             entityType = entity_type
+        }
+    end
+
+    local gate_uuid = try_parse_function_call_syntax(symbol, "gate")
+    if gate_uuid then
+        return {
+            gate = gate_uuid
         }
     end
 
