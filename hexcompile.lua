@@ -10,7 +10,7 @@ if not args[1] then
    return 1
 end
 
-local path = args[1]
+local path = shell.resolve(args[1])
 local handle = fs.open(path, 'r')
 if not handle then
     print('Failed to open file')
