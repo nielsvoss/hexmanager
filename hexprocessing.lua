@@ -56,6 +56,13 @@ function HexProcessing.process_nonpattern(symbol)
         return false
     end
 
+    local entity_uuid = try_parse_function_call_syntax(symbol, "entity")
+    if entity_uuid then
+        return {
+            uuid = entity_uuid
+        }
+    end
+
     local iota_type = try_parse_function_call_syntax(symbol, "iota_type")
     if iota_type then
         return {
