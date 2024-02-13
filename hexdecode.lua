@@ -36,11 +36,13 @@ function HexDecode.decode_nonlist(iota)
     elseif iota.x and iota.y and iota.z then
         return '<'..tostring(iota.x)..', '..tostring(iota.y)..', '..tostring(iota.z)..'>'
     elseif iota.uuid then
-        return '- garbage // Entities are currently unsupported by the decoder'
+        return '- entity('..iota.uuid..') // Entity name: '..iota.name
     elseif iota.iotaType then
-        return '- garbage // Iota Types are currently unsupported by the decoder'
+        return '- iota_type('..iota.iotaType..')'
+    elseif iota.entityType then
+        return '- entity_type('..iota.entityType..')'
     elseif iota.gate then
-        return '- garbate // Gates are currently unsupported by the decoder'
+        return '- gate('..iota.gate..')'
     elseif iota.moteUuid then
         return '- garbage // Motes are currently unsupported by the decoder'
     elseif iota.matrix then
