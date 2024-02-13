@@ -84,6 +84,14 @@ function HexProcessing.process_nonpattern(symbol)
         }
     end
 
+    local item_type = try_parse_function_call_syntax(symbol, "item_type")
+    if item_type then
+        return {
+            isItem = true,
+            itemType = item_type
+        }
+    end
+
     local asnumber = tonumber(symbol)
     if asnumber then return asnumber end
 

@@ -41,6 +41,8 @@ function HexDecode.decode_nonlist(iota)
         return '- iota_type('..iota.iotaType..')'
     elseif iota.entityType then
         return '- entity_type('..iota.entityType..')'
+    elseif iota.isItem then
+        return '- item_type('..iota.itemType..')'
     elseif iota.gate then
         return '- gate('..iota.gate..')'
     elseif iota.moteUuid then
