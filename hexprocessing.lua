@@ -3,6 +3,35 @@ require('hexnumbers')
 
 HexProcessing = {}
 
+local function try_parse_vector_iota(text)
+    local vector_res, _, x_str, y_str, z_str =
+        string.find(text, "%<([%-%.%w]*),%s*([%-%.%w]*),%s*([%-%.%w]*)%>")
+    if vector_res then
+        local x = tonumber(x_str)
+        local y = tonumber(y_str)
+        local z = tonumber(z_str)
+        if x and y and z then
+            return {
+                x = x,
+                y = y,
+                z = z
+            }
+        else
+            error("Invalid number in vector")
+        end
+    end
+    return nil
+end
+
+local function try_parse_string_iota(text)
+    local string_res, _, str = string.find(text, '^%"(.*)%"$')
+    if string_res then
+        -- TODO: String escape codes
+        return str
+    end
+    return nil
+end
+
 function HexProcessing.process_nonpattern(symbol)
     if symbol == 'null' then
         return {
@@ -19,32 +48,13 @@ function HexProcessing.process_nonpattern(symbol)
     end
 
     local asnumber = tonumber(symbol)
-    if asnumber then
-        return asnumber
-    end
+    if asnumber then return asnumber end
 
-    local vector_res, _, x_str, y_str, z_str =
-        string.find(symbol, "%<([%-%.%w]*),%s*([%-%.%w]*),%s*([%-%.%w]*)%>")
-    if vector_res then
-        local x = tonumber(x_str)
-        local y = tonumber(y_str)
-        local z = tonumber(z_str)
-        if x and y and z then
-            return {
-                x = x,
-                y = y,
-                z = z
-            }
-        else
-            error("Invalid number in vector")
-        end
-    end
+    local vector_res = try_parse_vector_iota(symbol)
+    if vector_res then return vector_res end
 
-    local string_res, _, str = string.find(symbol, '^%"(.*)%"$')
-    if string_res then
-        -- TODO: String escape codes
-        return str
-    end
+    local string_res = try_parse_string_iota(symbol)
+    if string_res then return string_res end
 
     -- TODO: Entities, Iota Types, Entity Types, Gates, Motes, Matricies
 
