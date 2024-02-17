@@ -43,7 +43,13 @@ end
 
 local function non_bracket_token_to_node(token)
   token = trim(token) -- Should already be handled, but just in case
-  if string.match(token, "^-") then
+  if string.match(token, "^#") then
+    local _, _, remaining = string.find(token, "#(.*)")
+    return {
+      token_type = 'macrocall',
+      value = trim(remaining)
+    }
+  elseif string.match(token, "^-") then
     local _, _, remaining = string.find(token, "-(.*)")
     return {
       token_type = 'nonpattern',
