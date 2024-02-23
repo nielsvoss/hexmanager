@@ -218,7 +218,7 @@ function HexProcessing.process_pattern(symbol)
     }
 end
 
-function HexProcessing.process(nodes)
+function HexProcessing.process(nodes, processing_environment)
     local iotas = {}
     for _,node in ipairs(nodes) do
         if node.token_type == 'directive' then

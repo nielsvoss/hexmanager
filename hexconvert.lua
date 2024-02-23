@@ -8,8 +8,9 @@ HexConvert = {}
 function HexConvert.compile(s)
    local tokens = HexParsing.tokenize(s)
    local ast = HexParsing.tokens_to_ast(tokens)
-   HexDirectives.run_directives(ast)
-   local iotas = HexProcessing.process(ast)
+   local processing_environment = {}
+   HexDirectives.run_directives(ast, processing_environment)
+   local iotas = HexProcessing.process(ast, processing_environment)
    return iotas
 end
 
