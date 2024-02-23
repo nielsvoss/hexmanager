@@ -46,7 +46,7 @@ local function non_bracket_token_to_node(token)
   if string.match(token, "^#") then
     local _, _, remaining = string.find(token, "#(.*)")
     return {
-      token_type = 'macrocall',
+      token_type = 'directive',
       value = trim(remaining)
     }
   elseif string.match(token, "^-") then
