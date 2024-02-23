@@ -223,8 +223,9 @@ function HexProcessing.process(nodes)
     for _,node in ipairs(nodes) do
         if node.token_type == 'directive' then
             error("Internal error (please report): Directive calls shouldn't exist at this processing stage")
-        end
-        if node.token_type == 'pattern' then
+        elseif node.token_type == 'noop' then
+            -- Do nothing
+        elseif node.token_type == 'pattern' then
             table.insert(iotas, HexProcessing.process_pattern(node.value))
         elseif node.token_type == 'nonpattern' then
             table.insert(iotas, HexProcessing.process_nonpattern(node.value))

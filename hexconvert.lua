@@ -1,6 +1,7 @@
 require('hexparsing')
 require('hexprocessing')
 require('hexdecode')
+require('hexdirectives')
 
 HexConvert = {}
 
@@ -25,6 +26,7 @@ end
 function HexConvert.compile(s)
    local tokens = HexParsing.tokenize(s)
    local ast = HexParsing.tokens_to_ast(tokens)
+   HexDirectives.run_directives(ast)
    local iotas = HexProcessing.process(ast)
    return iotas
 end
