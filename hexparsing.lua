@@ -44,11 +44,25 @@ end
 local function non_bracket_token_to_node(token)
   token = trim(token) -- Should already be handled, but just in case
   if string.match(token, "^#") then
-    local _, _, remaining = string.find(token, "#(.*)")
-    return {
-      token_type = 'directive',
-      value = trim(remaining)
-    }
+    local _, _, directive_name, argument = string.find(token, "^#([%w_]+)%s+(.*)$")
+    if directive_name then
+      return {
+        token_type = 'directive',
+        directive_name = directive_name,
+        argument = trim(argument)
+      }
+    else
+      local _, _, directive_name2 = string.find(token, "^#([%w_]+)$")
+      if directive_name2 then
+        return {
+          token_type = 'directive',
+          directive_name = directive_name2,
+          argument = ""
+        }
+      else
+        error("Invalid directive call")
+      end
+    end
   elseif string.match(token, "^-") then
     local _, _, remaining = string.find(token, "-(.*)")
     return {
