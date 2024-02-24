@@ -1,4 +1,5 @@
 require('util')
+require('fileutil')
 
 HexDirectives = {}
 
@@ -39,10 +40,26 @@ local function alias_directive(argument, all_nodes, nodes_in_scope, directive_in
     return false
 end
 
+local function include_directive(argument, all_nodes, nodes_in_scope, directive_index, processing_environment)
+    if argument == '' then
+        error("#include requires a file name")
+    end
+
+    if not processing_environment.current_file_path then
+        error('(Internal error, please report) Processing environment did not contain the file name')
+    end
+
+    local text = FileUtil.read_local_file(argument, processing_environment.current_file_path)
+    print(text)
+
+    return true
+end
+
 HexDirectives.directive_table = {
     ["directive_info"] = directive_info_directive,
     ["msg"] = msg_directive,
-    ["alias"] = alias_directive
+    ["alias"] = alias_directive,
+    ["include"] = include_directive
 }
 
 -- This function returns true if one of the directives modified the node tree in a suck a way that

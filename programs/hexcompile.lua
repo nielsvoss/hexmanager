@@ -26,7 +26,8 @@ end
 
 print('Compiling hex program...')
 local status,iotas = pcall(function()
-    return HexConvert.compile(program)
+    local processing_environment = { current_file_path = path }
+    return HexConvert.compile(program, processing_environment)
 end)
 if status then
     print('Compiled hex program.')

@@ -5,10 +5,12 @@ require('hexdirectives')
 
 HexConvert = {}
 
-function HexConvert.compile(s)
+function HexConvert.compile(s, processing_environment)
    local tokens = HexParsing.tokenize(s)
    local ast = HexParsing.tokens_to_ast(tokens)
-   local processing_environment = {}
+   if not processing_environment then
+      processing_environment = {}
+   end
    HexDirectives.run_directives(ast, processing_environment)
    local iotas = HexProcessing.process(ast, processing_environment)
    return iotas
