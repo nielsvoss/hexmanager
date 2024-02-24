@@ -70,18 +70,26 @@ end
 function FileUtil.read_web_file(url)
     --validate_url(url)
     local result = http.get(url)
+    local text
     if result then
-        local text = result.readAll()
+        text = result.readAll()
         result.close()
         write_into_webcache(url, text)
-        return text
     else
         print('Warning: Cannot connect to ' .. url .. '. Attempting to reach from webcache...')
-        local text = read_from_webcache(url)
+        text = read_from_webcache(url)
         if not text then
             error('Unable to retrieve webpage from webcache')
         end
         print('Retrived webpage from webcache')
-        return text
     end
+
+    -- Some files (like the ones downloaded from google docs) start with this byte order mark
+    -- We need to remove it so that the file processes properly
+    local utf8_byte_order_mark = 'ï»¿'
+    if text:match("^"..utf8_byte_order_mark) then
+        text = text:match("^"..utf8_byte_order_mark.."(.*)$")
+    end
+
+    return text
 end
