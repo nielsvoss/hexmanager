@@ -6,6 +6,8 @@ local path_to_this_file = debug.getinfo(1).source
 local base_directory = path_to_this_file:match("^@(.*)fileutil%.lua$")
 local webcache_directory = base_directory..'webcache/'
 
+local base64encoder = base64.makeencoder('+','-','_')
+
 local function get_directory(file_path)
     local _, _, directory = file_path:find("^(.*/)[^/]*$")
     return directory or ''
@@ -43,7 +45,7 @@ end
 ]]
 
 local function write_into_webcache(url, text)
-    local filename = webcache_directory..base64.encode(url)
+    local filename = webcache_directory..base64.encode(url, base64encoder)
     local file = io.open(filename, 'w')
     if not file then
         error('Could not open "'..filename..'"')
@@ -54,7 +56,7 @@ local function write_into_webcache(url, text)
 end
 
 local function read_from_webcache(url)
-    local filename = webcache_directory..base64.encode(url)
+    local filename = webcache_directory..base64.encode(url, base64encoder)
     local file = io.open(filename, 'r')
     if not file then
         return nil
