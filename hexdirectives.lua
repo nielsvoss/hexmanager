@@ -1,5 +1,6 @@
 require('util')
 require('fileutil')
+require('hexparsing')
 
 HexDirectives = {}
 
@@ -40,6 +41,28 @@ local function alias_directive(argument, all_nodes, nodes_in_scope, directive_in
     return false
 end
 
+local function include_code(nodes_in_scope, index, text)
+    local tokens = HexParsing.tokenize(text)
+    local ast = HexParsing.tokens_to_ast(tokens)
+
+    -- First we remove all nodes after the #include directive, and store them to add back later
+    -- nodes_after_include will be in reverse order
+    local nodes_after_include = {}
+    for _=index+1,#nodes_in_scope do
+        table.insert(nodes_after_include, table.remove(nodes_in_scope))
+    end
+
+    -- Then we add the new nodes to the end of the node list
+    for _,node in ipairs(ast) do
+        table.insert(nodes_in_scope, node)
+    end
+
+    -- Now we add back the nodes we removed earlier
+    for i=#nodes_after_include,1,-1 do
+        table.insert(nodes_in_scope, nodes_after_include[i])
+    end
+end
+
 local function include_directive(argument, all_nodes, nodes_in_scope, directive_index, processing_environment)
     if argument == '' then
         error("#include requires a file name")
@@ -50,7 +73,7 @@ local function include_directive(argument, all_nodes, nodes_in_scope, directive_
     end
 
     local text = FileUtil.read_local_file(argument, processing_environment.current_file_path)
-    print(text)
+    include_code(nodes_in_scope, directive_index, text)
 
     return true
 end
