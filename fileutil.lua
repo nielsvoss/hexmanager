@@ -8,8 +8,12 @@ local function get_directory(file_path)
 end
 
 function FileUtil.read_local_file(path, current_file_path)
+    if path == '' then
+        error("Path must be nonempty")
+    end
+
     local directory = ""
-    if current_file_path then
+    if current_file_path and path:sub(1,1) ~= '/' then
         directory = get_directory(current_file_path)
     end
 
@@ -17,6 +21,6 @@ function FileUtil.read_local_file(path, current_file_path)
     if f then
         return f:read('*a')
     else
-        error('Could not locate file "'..directory..path..'"')
+        error('Could not open file "'..directory..path..'"')
     end
 end
