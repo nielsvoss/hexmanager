@@ -12,7 +12,7 @@ end
 function HexParsing.tokenize(text)
     local tokens = {}
     for line in string.gmatch(text, "[^\n]+") do
-        local comment_start_loccation = string.find(line, "//")
+        local comment_start_loccation = string.find(line, "%-%-")
         if comment_start_loccation then
             line = string.sub(line, 1, comment_start_loccation - 1)
         end
