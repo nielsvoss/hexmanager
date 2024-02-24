@@ -179,7 +179,11 @@ local function parse_angles(text)
     error("Failed to parse angles")
 end
 
-function HexProcessing.process_pattern(symbol)
+function HexProcessing.process_pattern(symbol, alias_table)
+    if alias_table and alias_table[symbol] then
+        symbol = alias_table[symbol]
+    end
+
     -- Check if pattern angles are specified explicitly
     local angles_res, _, angles = string.find(symbol, "%(([%w_]*)%)$")
     if angles_res then
@@ -226,7 +230,7 @@ function HexProcessing.process(nodes, processing_environment)
         elseif node.token_type == 'noop' then
             -- Do nothing
         elseif node.token_type == 'pattern' then
-            table.insert(iotas, HexProcessing.process_pattern(node.value))
+            table.insert(iotas, HexProcessing.process_pattern(node.value, processing_environment.alias_table))
         elseif node.token_type == 'nonpattern' then
             table.insert(iotas, HexProcessing.process_nonpattern(node.value))
         elseif node.token_type == 'list' then

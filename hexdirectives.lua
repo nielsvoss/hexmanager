@@ -19,9 +19,23 @@ local function msg_directive(argument, all_nodes, nodes_in_scope, directive_inde
     return false
 end
 
+local function alias_directive(argument, all_nodes, nodes_in_scope, directive_index, processing_environment)
+    local _, _, alias_name, pattern_name = argument:find("^%s*([%w%s_]+)%s*=%s*([%w%s%p%(%)_]+)%s*$")
+    if not alias_name or not pattern_name then
+        error('Invalid alias declaration "'..argument..'"')
+    end
+
+    if not processing_environment.alias_table then
+        processing_environment.alias_table = {}
+    end
+    processing_environment.alias_table[alias_name] = pattern_name
+    return false
+end
+
 HexDirectives.directive_table = {
     ["directive_info"] = directive_info_directive,
-    ["msg"] = msg_directive
+    ["msg"] = msg_directive,
+    ["alias"] = alias_directive
 }
 
 -- This function returns true if one of the directives modified the node tree in a suck a way that
