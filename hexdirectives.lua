@@ -78,11 +78,23 @@ local function include_directive(argument, all_nodes, nodes_in_scope, directive_
     return true
 end
 
+local function webinclude_directive(argument, all_nodes, nodes_in_scope, directive_index, processing_environment)
+    if argument == '' then
+        error("#webinclude requires a url")
+    end
+
+    local text = FileUtil.read_web_file(argument)
+    include_code(nodes_in_scope, directive_index, text)
+
+    return true
+end
+
 HexDirectives.directive_table = {
     ["directive_info"] = directive_info_directive,
     ["msg"] = msg_directive,
     ["alias"] = alias_directive,
-    ["include"] = include_directive
+    ["include"] = include_directive,
+    ["webinclude"] = webinclude_directive
 }
 
 -- This function returns true if one of the directives modified the node tree in a suck a way that
