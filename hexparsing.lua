@@ -1,19 +1,9 @@
+require('util')
+
 HexParsing = {}
 
-local function trim(s)
-  local l = 1
-  while string.sub(s, l, l) == ' ' do
-    l = l + 1
-  end
-  local r = string.len(s)
-  while string.sub(s, r, r) == ' ' do
-    r = r - 1
-  end
-  return string.sub(s, l, r)
-end
-
 local function insert_trimmed_if_nonempty(t, str)
-  local str_trimmed = trim(str)
+  local str_trimmed = Util.trim(str)
   if str_trimmed ~= "" then
     table.insert(t, str_trimmed)
   end
@@ -42,14 +32,14 @@ function HexParsing.tokenize(text)
 end
 
 local function non_bracket_token_to_node(token)
-  token = trim(token) -- Should already be handled, but just in case
+  token = Util.trim(token) -- Should already be handled, but just in case
   if string.match(token, "^#") then
     local _, _, directive_name, argument = string.find(token, "^#([%w_]+)%s+(.*)$")
     if directive_name then
       return {
         token_type = 'directive',
         directive_name = directive_name,
-        argument = trim(argument)
+        argument = Util.trim(argument)
       }
     else
       local _, _, directive_name2 = string.find(token, "^#([%w_]+)$")
@@ -67,12 +57,12 @@ local function non_bracket_token_to_node(token)
     local _, _, remaining = string.find(token, "-(.*)")
     return {
       token_type = 'nonpattern',
-      value = trim(remaining)
+      value = Util.trim(remaining)
     }
   else
     return {
       token_type = 'pattern',
-      value = trim(token)
+      value = Util.trim(token)
     }
   end
 end

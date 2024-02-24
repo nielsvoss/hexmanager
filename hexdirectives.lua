@@ -20,15 +20,22 @@ local function msg_directive(argument, all_nodes, nodes_in_scope, directive_inde
 end
 
 local function alias_directive(argument, all_nodes, nodes_in_scope, directive_index, processing_environment)
-    local _, _, alias_name, pattern_name = argument:find("^%s*([%w%s_]+)%s*=%s*([%w%s%p%(%)_]+)%s*$")
+    local _, _, alias_name, pattern_name = argument:find("^([%w%s_]*)=([%w%s%p%(%)_]*)$")
     if not alias_name or not pattern_name then
         error('Invalid alias declaration "'..argument..'"')
+    end
+
+    local alias_name_trimmed = Util.trim(alias_name)
+    local pattern_name_trimmed = Util.trim(pattern_name)
+
+    if alias_name_trimmed == '' or pattern_name_trimmed == '' then
+        error('#alias requires something on both sides of the equal sign')
     end
 
     if not processing_environment.alias_table then
         processing_environment.alias_table = {}
     end
-    processing_environment.alias_table[alias_name] = pattern_name
+    processing_environment.alias_table[alias_name_trimmed] = pattern_name_trimmed
     return false
 end
 

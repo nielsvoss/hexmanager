@@ -17,3 +17,15 @@ end
 function Util.print_table(o)
   print(Util.table_to_string(o))
 end
+
+function Util.trim(s)
+  local l = 1
+  while string.sub(s, l, l) == ' ' do
+    l = l + 1
+  end
+  local r = string.len(s)
+  while string.sub(s, r, r) == ' ' do
+    r = r - 1
+  end
+  return string.sub(s, l, r)
+end
