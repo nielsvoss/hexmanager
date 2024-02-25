@@ -2,14 +2,21 @@ require('hexpatterns')
 
 HexDecode = {}
 
-function HexDecode.decode_pattern(pattern)
-    local angles = pattern.angles
+function HexDecode.decode_pattern(pattern_iota)
+    local angles = pattern_iota.angles
+    local use_short_names = HexConfig.get('use_short_names_when_decoding') == 'true'
+
     local pattern = HexPatterns.from_angles(angles)
     if pattern then
+        local pattern_name = pattern.translation
+        if use_short_names then
+            pattern_name = pattern.name
+        end
+
         if HexPatterns.is_dynamic(pattern) then
-            return pattern.translation..' ('..angles..')'
+            return pattern_name..' ('..angles..')'
         else
-            return pattern.translation
+            return pattern_name
         end
     end
 
