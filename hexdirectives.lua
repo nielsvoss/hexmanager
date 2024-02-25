@@ -69,7 +69,7 @@ local function include_directive(argument, all_nodes, nodes_in_scope, directive_
     end
 
     if not processing_environment.current_file_path then
-        error('(Internal error, please report) Processing environment did not contain the file name')
+        error('#include is only supported when compiling from a file')
     end
 
     local text = FileUtil.read_local_file(argument, processing_environment.current_file_path)
