@@ -1,4 +1,5 @@
 require('hexpatterns')
+require('hexconfig')
 
 HexDecode = {}
 
