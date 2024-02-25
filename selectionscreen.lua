@@ -36,9 +36,29 @@ function SelectionScreen.menu(menu_items, prompt)
     local current_selection = 1
     local index_at_top = 1
     local filter_text = ''
+    local filter_text_just_updated = true
+
+    local filtered_menu_items
+    local corresponding_indicies
 
     while true do
-        draw_menu(menu_items, current_selection, index_at_top, number_to_display, prompt..filter_text)
+        if filter_text_just_updated then
+            filtered_menu_items = {}
+            corresponding_indicies = {}
+
+            for i,item in ipairs(menu_items) do
+                if item:sub(1, #filter_text) == filter_text then
+                    table.insert(filtered_menu_items, item)
+                    table.insert(corresponding_indicies, i)
+                end
+            end
+
+            current_selection = 1
+            index_at_top = 1
+            filter_text_just_updated = false
+        end
+
+        draw_menu(filtered_menu_items, current_selection, index_at_top, number_to_display, prompt..filter_text)
         local event, p1 = os.pullEvent()
 
         if event == 'key' then
@@ -48,6 +68,7 @@ function SelectionScreen.menu(menu_items, prompt)
                 if #filter_text > 0 then
                     filter_text = filter_text:sub(1, #filter_text - 1)
                 end
+                filter_text_just_updated = true
             elseif p1 == down_arrow_key then
                 current_selection = math.min(current_selection + 1, #menu_items)
             elseif p1 == up_arrow_key then
@@ -55,6 +76,7 @@ function SelectionScreen.menu(menu_items, prompt)
             end
         elseif event == 'char' then
             filter_text = filter_text..p1
+            filter_text_just_updated = true
         end
 
         -- Scroll screen up and down
@@ -67,11 +89,12 @@ function SelectionScreen.menu(menu_items, prompt)
     end
 
     term.clear()
-    return current_selection
+    term.setCursorPos(1, 1)
+    return corresponding_indicies[current_selection]
 end
 
 local menu_items = {}
 for i=1,20 do
-    table.insert(menu_items, i)
+    table.insert(menu_items, ''..i)
 end
 print(SelectionScreen.menu(menu_items, "select: "))
