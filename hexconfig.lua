@@ -21,7 +21,7 @@ function HexConfig.get(option_name)
     local text = get_config_file_contents()
 
     for line in text:gmatch("[^\n]+") do
-        local option, value = text:match("(.*)=(.*)")
+        local option, value = text:match("([^\n]*)=([^\n]*)")
         if option and Util.trim(option) == option_name then
             return Util.trim(value)
         end
