@@ -11,6 +11,13 @@ end
 
 function HexParsing.tokenize(text)
     text = text:gsub('\r\n', '\n')
+
+    -- Replace slanted quotation marks
+    text = text:gsub(utf8.char(8216),"'")
+    text = text:gsub(utf8.char(8217),"'")
+    text = text:gsub(utf8.char(8220),'"')
+    text = text:gsub(utf8.char(8221),'"')
+
     local tokens = {}
     local current_token = ''
     local is_string = false
