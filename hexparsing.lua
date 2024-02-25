@@ -10,26 +10,53 @@ local function insert_trimmed_if_nonempty(t, str)
 end
 
 function HexParsing.tokenize(text)
-    text = text:gsub('\r\n', '\n')
-    local tokens = {}
-    for line in string.gmatch(text, "[^\n]+") do
-        local comment_start_loccation = string.find(line, "%-%-")
-        if comment_start_loccation then
-            line = string.sub(line, 1, comment_start_loccation - 1)
-        end
+  text = text:gsub('\r\n', '\n')
+  local tokens = {}
+  local current_token = ''
+  local is_string = false
+  local is_comment = false
 
-        for segment in string.gmatch(line, "[^;]+") do
-            local bracket_index = string.find(segment, "[{}%[%]]")
-            while bracket_index do
-                insert_trimmed_if_nonempty(tokens, string.sub(segment, 1, bracket_index - 1))
-                table.insert(tokens, string.sub(segment, bracket_index, bracket_index))
-                segment = string.sub(segment, bracket_index + 1)
-                bracket_index = string.find(segment, "[{}%[%]]")
-            end
-            insert_trimmed_if_nonempty(tokens, segment)
-        end
+  for i=1,#text do
+    local char = text:sub(i,i)
+
+    if char == '\n' then
+      -- Typing a backslash before a line break will disable the line break
+      if current_token.sub(#current_token, #current_token) == '\\' then
+        current_token = current_token.sub(1, #current_token - 1)
+      elseif is_string then
+        error("String wasn't fully closed")
+      else
+        insert_trimmed_if_nonempty(tokens, current_token)
+        current_token = ''
+        is_comment = false
+      end
+    elseif char == ';' and not is_string and not is_comment then
+      if current_token.sub(#current_token, #current_token) == '\\' then
+        current_token = current_token.sub(1, #current_token - 1)..';'
+      else
+        insert_trimmed_if_nonempty(tokens, current_token)
+        current_token = ''
+      end
+    elseif char:match("^[{}%[%]]$") and not is_string and not is_comment then
+      if current_token.sub(#current_token, #current_token) == '\\' then
+        current_token = current_token.sub(1, #current_token - 1)..char
+      else
+        insert_trimmed_if_nonempty(tokens, current_token)
+        insert_trimmed_if_nonempty(tokens, char)
+        current_token = ''
+      end
+    elseif not is_string and char == '/' and text:sub(i,i+1) == '//' then
+      is_comment = true
+    elseif not is_comment and char == '"' then
+      is_string = not is_string
+      current_token = current_token..'"'
+    elseif not is_comment then
+      current_token = current_token..char
     end
-    return tokens
+  end
+
+  insert_trimmed_if_nonempty(tokens, current_token)
+  return tokens
 end
 
 local function non_bracket_token_to_node(token)
