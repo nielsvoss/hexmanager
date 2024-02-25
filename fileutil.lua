@@ -86,9 +86,13 @@ function FileUtil.read_web_file(url)
 
     -- Some files (like the ones downloaded from google docs) start with this byte order mark
     -- We need to remove it so that the file processes properly
-    local utf8_byte_order_mark = 'ï»¿'
-    if text:match("^"..utf8_byte_order_mark) then
-        text = text:match("^"..utf8_byte_order_mark.."(.*)$")
+
+    -- This first string doesn't seem to work with my local version of lua but does with
+    -- ComputerCraft. My local lua converts \239 into an intersect symbol, which isn't correct.
+    local utf8_byte_order_mark_computercraft = '\239\187\191'
+    local utf8_byte_order_mark_local_lua = '\139\175\168'
+    if text:match("^"..utf8_byte_order_mark_computercraft) then
+        text = text:match("^"..utf8_byte_order_mark_computercraft.."(.*)$")
     end
 
     return text
