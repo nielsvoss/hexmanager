@@ -25,7 +25,7 @@ for line in text:gmatch("[^\n]+") do
     end
 end
 
-local i = SelectionScreen.menu(hex_names)
+local i = SelectionScreen.menu(hex_names, "Select Hex: ")
 local hex_name = hex_urls[i]
 local hex_url = hex_urls[i]
 
