@@ -3,6 +3,7 @@
         "fs",
         "shell",
         "peripheral",
-        "http"
+        "http",
+        "term"
     ]
 }
