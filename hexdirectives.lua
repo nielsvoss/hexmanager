@@ -22,7 +22,7 @@ local function msg_directive(argument, all_nodes, nodes_in_scope, directive_inde
 end
 
 local function alias_directive(argument, all_nodes, nodes_in_scope, directive_index, processing_environment)
-    local _, _, alias_name, pattern_name = argument:find("^([%w%s_]*)=([%w%s%p%(%)_]*)$")
+    local _, _, alias_name, pattern_name = argument:find("^([%w%s%p_]*)=([%w%s%p%(%)_]*)$")
     if not alias_name or not pattern_name then
         error('Invalid alias declaration "'..argument..'"')
     end
