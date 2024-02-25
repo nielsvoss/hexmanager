@@ -15,15 +15,28 @@ function HexParsing.tokenize(text)
   local current_token = ''
   local is_string = false
   local is_comment = false
+  local backslash_just_entered = false
 
   for i=1,#text do
     local char = text:sub(i,i)
 
-    if char == '\n' then
-      -- Typing a backslash before a line break will disable the line break
-      if current_token.sub(#current_token, #current_token) == '\\' then
-        current_token = current_token.sub(1, #current_token - 1)
-      elseif is_string then
+    if backslash_just_entered then
+      if is_string then
+        if char == 'n'  then
+          current_token = current_token..'\n'
+        elseif char == '\\' then
+          current_token = current_token..'\\'
+        else
+          error("Invalid escape sequence")
+        end
+        backslash_just_entered = false
+      else
+        -- Enter char literally, without causing special effects for semicolons or brackets
+        current_token = current_token..char
+        backslash_just_entered = false
+      end
+    elseif char == '\n' then
+      if is_string then
         error("String wasn't fully closed")
       else
         insert_trimmed_if_nonempty(tokens, current_token)
@@ -31,25 +44,19 @@ function HexParsing.tokenize(text)
         is_comment = false
       end
     elseif char == ';' and not is_string and not is_comment then
-      if current_token.sub(#current_token, #current_token) == '\\' then
-        current_token = current_token.sub(1, #current_token - 1)..';'
-      else
-        insert_trimmed_if_nonempty(tokens, current_token)
-        current_token = ''
-      end
+      insert_trimmed_if_nonempty(tokens, current_token)
+      current_token = ''
     elseif char:match("^[{}%[%]]$") and not is_string and not is_comment then
-      if current_token.sub(#current_token, #current_token) == '\\' then
-        current_token = current_token.sub(1, #current_token - 1)..char
-      else
-        insert_trimmed_if_nonempty(tokens, current_token)
-        insert_trimmed_if_nonempty(tokens, char)
-        current_token = ''
-      end
+      insert_trimmed_if_nonempty(tokens, current_token)
+      insert_trimmed_if_nonempty(tokens, char)
+      current_token = ''
     elseif not is_string and char == '/' and text:sub(i,i+1) == '//' then
       is_comment = true
     elseif not is_comment and char == '"' then
       is_string = not is_string
       current_token = current_token..'"'
+    elseif not is_comment and char == '\\' then
+      backslash_just_entered = true
     elseif not is_comment then
       current_token = current_token..char
     end
