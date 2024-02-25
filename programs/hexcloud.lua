@@ -5,6 +5,7 @@ package.path = package.path..";"..base_directory.."/?.lua"
 require('hexconvert')
 require('hexconfig')
 require('fileutil')
+require('selectionscreen')
 
 local url = HexConfig.get('hexcloud_url')
 if url == '' then
@@ -14,11 +15,13 @@ end
 
 local text = FileUtil.read_web_file(url)
 text = text:gsub('\r\n', '\n')
-local hexes = {}
+local hex_names = {}
+local hex_urls = {}
 for line in text:gmatch("[^\n]+") do
     local name, hex_url = line:match("^([^:]*):(.*)$")
     if name then
-        table.insert(hexes, { name = Util.trim(name), url = Util.trim(hex_url) })
+        table.insert(hex_names, Util.trim(name))
+        table.insert(hex_urls, Util.trim(hex_url))
     end
 end
 
@@ -29,34 +32,13 @@ local right_arrow_key = 262
 local left_arrow_key = 263
 local enter_key = 257
 
-local function draw_menu(cursor_pos)
-    term.clear()
-    for i,hex in ipairs(hexes) do
-        if i == cursor_pos then
-            print("> "..hex.name)
-        else
-            print("  "..hex.name)
-        end
-    end
-end
+local i = SelectionScreen.menu(hex_names)
+local hex_name = hex_urls[i]
+local hex_url = hex_urls[i]
 
-local selected = 1
-draw_menu(1)
-local sEvent, nKey = os.pullEvent('key')
-while nKey ~= enter_key do
-    if nKey == down_arrow_key then
-        selected = math.min(selected + 1, #hexes)
-    elseif nKey == up_arrow_key then
-        selected = math.max(selected - 1, 1)
-    end
-    draw_menu(selected)
-    sEvent, nKey = os.pullEvent('key')
-end
-
-local hex = hexes[selected]
-print('Selected "'..hex.name..'"')
+print('Selected "'..hex_name..'"')
 print('Downloading hex program...')
-local program = FileUtil.read_web_file(hex.url)
+local program = FileUtil.read_web_file(hex_url)
 
 print('Compiling hex program...')
 local status,iotas = pcall(function()

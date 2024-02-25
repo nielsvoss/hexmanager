@@ -92,9 +92,3 @@ function SelectionScreen.menu(menu_items, prompt)
     term.setCursorPos(1, 1)
     return corresponding_indicies[current_selection]
 end
-
-local menu_items = {}
-for i=1,20 do
-    table.insert(menu_items, ''..i)
-end
-print(SelectionScreen.menu(menu_items, "select: "))
