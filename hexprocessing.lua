@@ -235,10 +235,10 @@ function HexProcessing.process(nodes, processing_environment)
             table.insert(iotas, HexProcessing.process_nonpattern(node.value))
         elseif node.token_type == 'list' then
             if node.delimiter == '[' then
-                table.insert(iotas, HexProcessing.process(node.elements))
+                table.insert(iotas, HexProcessing.process(node.elements, processing_environment))
             elseif node.delimiter == '{' then
                 table.insert(iotas, HexProcessing.process_pattern("Introspection"))
-                for _,iota in ipairs(HexProcessing.process(node.elements)) do
+                for _,iota in ipairs(HexProcessing.process(node.elements, processing_environment)) do
                     table.insert(iotas, iota)
                 end
                 table.insert(iotas, HexProcessing.process_pattern("Retrospection"))
