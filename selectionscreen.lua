@@ -90,5 +90,7 @@ function SelectionScreen.menu(menu_items, prompt)
 
     term.clear()
     term.setCursorPos(1, 1)
+
+    -- This will be nil if the filter text did not match anything
     return corresponding_indicies[current_selection]
 end

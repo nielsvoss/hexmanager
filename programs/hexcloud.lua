@@ -26,6 +26,11 @@ for line in text:gmatch("[^\n]+") do
 end
 
 local i = SelectionScreen.menu(hex_names, "Select Hex: ")
+if not i then
+    print('No hex selected')
+    return 1
+end
+
 local hex_name = hex_names[i]
 local hex_url = hex_urls[i]
 
