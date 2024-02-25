@@ -25,13 +25,6 @@ for line in text:gmatch("[^\n]+") do
     end
 end
 
--- Selection menu
-local up_arrow_key = 265
-local down_arrow_key = 264
-local right_arrow_key = 262
-local left_arrow_key = 263
-local enter_key = 257
-
 local i = SelectionScreen.menu(hex_names)
 local hex_name = hex_urls[i]
 local hex_url = hex_urls[i]
