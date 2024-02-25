@@ -84,6 +84,19 @@ function HexProcessing.process_nonpattern(symbol)
         }
     end
 
+    local mote_data = try_parse_function_call_syntax(symbol, "mote")
+    if mote_data then
+        local mote_uuid, item_id = mote_data:match("^([^,]+),([^,]+)$")
+        if mote_uuid then
+            return {
+                moteUuid = Util.trim(mote_uuid),
+                itemID = Util.trim(item_id)
+            }
+        else
+            error("mote requires two inputs (mote uuid and item id)")
+        end
+    end
+
     local item_type = try_parse_function_call_syntax(symbol, "item_type")
     if item_type then
         return {

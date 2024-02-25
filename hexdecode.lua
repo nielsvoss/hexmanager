@@ -54,7 +54,7 @@ function HexDecode.decode_nonlist(iota)
     elseif iota.gate then
         return '- gate('..iota.gate..')'
     elseif iota.moteUuid then
-        return '- garbage // Motes are currently unsupported by the decoder'
+        return '- mote('..iota.moteUuid..', '..iota.itemID..') // Nexus UUID: '..iota.nexusUuid
     elseif iota.matrix then
         return '- garbage // Matricies are currently unsuppored by the decoder'
     else
