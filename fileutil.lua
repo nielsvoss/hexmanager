@@ -54,10 +54,20 @@ local function read_from_webcache(url)
     return text
 end
 
+local function process_url(url)
+    local documentId = url:match('^https://docs%.google%.com/document/d/([%w%-_]+)')
+    if documentId then
+        return 'https://docs.google.com/document/d/'..documentId..'/export?format=txt'
+    end
+
+    return url
+end
+
 function FileUtil.read_web_file(url)
     if not http then
         error('Internet files only work from ComputerCraft, and with the http variable non-nil')
     end
+    url = process_url(url)
 
     local result = http.get(url)
     local text
