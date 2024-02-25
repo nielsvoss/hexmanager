@@ -31,19 +31,6 @@ function FileUtil.read_local_file(path, current_file_path)
     end
 end
 
---[[
-local function validate_url(url)
-    if not http then
-        error('Internet files only work from ComputerCraft, and with the http variable non-nil')
-    end
-
-    local success, message = http.checkURL(url)
-    if not success then
-        error("Invalid URL: " .. message)
-    end
-end
-]]
-
 local function write_into_webcache(url, text)
     local filename = webcache_directory..base64.encode(url, base64encoder)
     local file = io.open(filename, 'w')
@@ -68,7 +55,10 @@ local function read_from_webcache(url)
 end
 
 function FileUtil.read_web_file(url)
-    --validate_url(url)
+    if not http then
+        error('Internet files only work from ComputerCraft, and with the http variable non-nil')
+    end
+
     local result = http.get(url)
     local text
     if result then
