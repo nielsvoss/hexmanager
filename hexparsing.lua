@@ -10,6 +10,7 @@ local function insert_trimmed_if_nonempty(t, str)
 end
 
 function HexParsing.tokenize(text)
+    text = text:gsub('\r\n', '\n')
     local tokens = {}
     for line in string.gmatch(text, "[^\n]+") do
         local comment_start_loccation = string.find(line, "%-%-")
