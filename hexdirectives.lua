@@ -83,7 +83,12 @@ local function webinclude_directive(argument, all_nodes, nodes_in_scope, directi
         error("#webinclude requires a url")
     end
 
-    local text = FileUtil.read_web_file(argument)
+    local url = argument:match('^"(.*)"$')
+    if not url then
+        error("URL is required to be in quotes")
+    end
+
+    local text = FileUtil.read_web_file(url)
     include_code(nodes_in_scope, directive_index, text)
 
     return true

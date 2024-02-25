@@ -67,6 +67,11 @@ function FileUtil.read_web_file(url)
     if not http then
         error('Internet files only work from ComputerCraft, and with the http variable non-nil')
     end
+
+    if url == '' then
+        error('URL cannot be empty')
+    end
+
     url = process_url(url)
 
     local result = http.get(url)
