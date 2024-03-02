@@ -45,9 +45,10 @@ pastebin run p8PJVxC4
 Note that `computercraft-github` is currently unmaintained, so if you have trouble, please try using
 one of its forks or another project to download from github.
 
-After installing `computercraft-github`, run the following command to download Hex Manager:
+After installing `computercraft-github`, run the following command to download Hex Manager
+version 0.1:
 ```
-github clone osbourn/hexmanager
+github clone osbourn/hexmanager -t v0.1
 ```
 
 Make sure you are in the root directory before running either of the above commands.
