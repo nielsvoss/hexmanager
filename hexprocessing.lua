@@ -172,7 +172,7 @@ local valid_angles = {
 
 local function parse_angles(text)
     -- Check if both the angles and starting direction are specified
-    local startDir_with_angles_res, _, startDir, angles1 = string.find(text, "^(%u+)_([aqwed]*)$")
+    local startDir_with_angles_res, _, startDir, angles1 = string.find(text, "^([%u_]+)_([aqwed]*)$")
     if startDir_with_angles_res then
         if not valid_angles[startDir] then error("Invalid direction "..startDir) end
         return {
