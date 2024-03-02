@@ -210,3 +210,30 @@ put the number `6` on to the stack. This only works for a very small set of numb
 will need to be specified manually with parentheses.
 - If you write `Bookkeeper's Gambit: vv--` or `mask: vv--` will drop the 3rd and 4th elements of the
 stack, as normal. You can use any combination of `v` and `-` like a normal `Bookkeeper's Gambit`.
+
+### Nonpattern iotas
+
+Hex Manager has the ability to include iotas that aren't patterns directly into your spell. This
+is particularly helpful to get complex data like vectors and gates included into the spell. Just
+like if you did this normally, you would need to add `Consideration` patterns before the nonpattern
+iota, depending on how many levels of nesting you use.
+
+Except for lists, all nonpattern iotas start with a hyphen so that you can tell them apart from
+normal patterns.
+
+Most types of nonpattern iotas are easy to understand if given an example:
+```
+- null // The null constant
+- garbage // A garbage iota
+- true // The true boolean
+- false // The false boolean
+- 12 // The number 12
+- <100,64,-100> // A vector
+- "Hello, World" // A string iota, from More Iotas
+- entity(61c8f48b-470c-4581-b807-a466b28036c7) // The entity with the provided UUID
+- iota_type(hexcasting:entity) // The "Entity" iota type, from Hexal
+- entity_type(minecraft:player) // The "Player Type" entity type, from Hexal
+```
+
+Some types of nonpattern iotas are not yet listed above, and not all types are available. Please
+file an issue on this repository if a type you would like is not available.
