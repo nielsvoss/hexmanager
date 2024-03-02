@@ -160,6 +160,10 @@ it will display the list of spells in your index, letting you select them with a
 typing to filter. Choose a spell, and it will be compiled as if you had download it and run
 `hexcompile` on it.
 
+`hexcloud` uses a cache for webpages. This can help if you lose internet connection for some reason,
+but it means that Hex Manager will use an outdated version of a file rather than failing, which can
+be frustrating if you don't notice this happening.
+
 ## The Hex Programming Language
 
 The custom programming language used by Hex Manager for writing spells is fairly simple, but has a
@@ -264,3 +268,69 @@ You probably need to use `Consideration` to get the spell to work if you use Dat
 In general, you won't need Data Lists very frequently.
 
 Data Lists are the only nonpattern iota type which do not need to start with a `hyphen`.
+
+### Preprocessor directives
+
+Lines of code that start with `#` are preprocessor directives, which means that they usually affect
+the code or processing environment in some specialized way.
+
+Currently, the following preprocessor directives exist:
+- `#alias`
+- `#include`
+- `#webinclude`
+
+There are a few more preprocessor directives listed here designed for debugging use and are not
+intended to be used by the end user.
+
+#### `#alias`
+
+`#alias` lets you provide extra names for frequently used patterns or sets of angles.
+The syntax is `#alias name = pattern` or `#alias name = (angles)`. For example:
+```
+#alias self = get_caster
+```
+`get_caster` is the shorthand id that refers to `Mind's Reflection`. This alias allows you to type
+`self` in place of a pattern, and it will be interpreted as `get_caster`.
+
+Note that currently, aliases affect the entire file, no matter where they are declared. So, an alias
+can affect code that is written above it. This may change in the future, so try to declare all your
+aliases at the top of the file.
+
+You may wish to declare aliases in a separate file, and then use `#include`, as described below.
+
+#### `#include`
+
+`#include` copies a file into the current file. The path of the file is relative to the file you
+compiled with `hexcompile`. If the file you `#include` has `#include` statements of its own, those
+are also relative to the original file, not the intermediate file.
+
+For example, if you declared all your aliases in a file called `aliases.hex` in the same folder as
+the spell you are writing, then you can type
+```
+#include aliases.hex
+```
+to use all your aliases in your current file.
+
+`#include` is not available when using `hexcloud` because there is no way to refer to files in the
+local filesystem. You can use `#webinclude` instead in this case.
+
+#### `#webinclude`
+
+`#webinclude` is like `#include`, but it copies a file from the internet rather than from a local
+file. Unlike `#include`, it is available whether or not you are using `hexcloud`.
+
+The syntax is `#webinclude "https://url/to/file"`. The quotes were added as a requirement because
+otherwise `//` would start a comment. The rules for what counts as a valid url are the same as those
+listed above for `hexcloud`.
+
+For example, if you declare all your aliases in a Google Doc, make sure to change the sharing
+permissions so that anyone on the internet with the link can view, then use `#webinclude` like:
+```
+#webinclude "https://docs.google.com/document/d/1266Y8JI6wMIDJncXA18LcQVReV7szAIRT11c9mKcGNQ/edit"
+```
+
+Note that Google Docs have special handling, and in most other cases the file is required to be in
+plaintext.
+
+Like `hexcloud`. `#webinclude` uses a cache, and it has the same flaw of possibly using an outdated
+file without making it obvious that the file is outdated.
