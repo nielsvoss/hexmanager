@@ -334,3 +334,8 @@ plaintext.
 
 Like `hexcloud`. `#webinclude` uses a cache, and it has the same flaw of possibly using an outdated
 file without making it obvious that the file is outdated.
+
+## License
+
+Hex Manager is licensed under the MIT License, which means you can do almost whatever you would like
+with it. However, if you modify this project to fit your needs, I would love to hear about it.
