@@ -237,3 +237,30 @@ Most types of nonpattern iotas are easy to understand if given an example:
 
 Some types of nonpattern iotas are not yet listed above, and not all types are available. Please
 file an issue on this repository if a type you would like is not available.
+
+### Lists
+
+There are type types of listsh, each using either the `{}` and `[]` brackets.
+
+Both types of brackets can be on the same line as other code without requiring a semicolon to
+separate them.
+
+#### Logical Lists - Curly Brackets
+
+The `{}` denote a logical list, the type of list you will probably be using most often. Adding
+`{` and `}` to your code will enclose the code they surround in the `Introspection` and
+`Retrospection` patterns. This allows you to use them to add an extra level of nesting to your code.
+
+Note that even though `{` basically just adds an `Introspection` iota, it still requires a matching
+`}` due to the way it is implemented. If you just want to insert an `Introspection` iota without
+requiring a matching `Retrospection` (which is a very rare situation), you can litterally just type
+`Introspection` as a pattern iota.
+
+#### Data Lists - Square Brackets
+
+The `[]` denote a data list, which is like if you just inserted a list iota into the spell directly.
+You probably need to use `Consideration` to get the spell to work if you use Data Lists.
+
+In general, you won't need Data Lists very frequently.
+
+Data Lists are the only nonpattern iota type which do not need to start with a `hyphen`.
