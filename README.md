@@ -146,7 +146,7 @@ the straight quotes accepted by Hex Manager are handled for you.
 
 Why would you store spells in Google Docs? I don't know, but you can do it if you want. Other good
 options for storing spells include GitHub (which currently requires you to use the
-`raw.githubusercontent.com` links. This may change in the future.)
+`raw.githubusercontent.com` links. This may change in the future).
 
 In any case, get the link to your Spell Index file, and create or edit the `hexmanager/config.txt`
 file so that it contains:
@@ -159,3 +159,54 @@ If everything has been done properly, and the ComputerCraft machine has access t
 it will display the list of spells in your index, letting you select them with arrow keys or by
 typing to filter. Choose a spell, and it will be compiled as if you had download it and run
 `hexcompile` on it.
+
+## The Hex Programming Language
+
+The custom programming language used by Hex Manager for writing spells is fairly simple, but has a
+few advanced features.
+
+### Basic Syntax
+
+Each line represents one iota, except maybe in the case of lists. Semicolons split lines like line
+breaks. The semicolon (as well as a few characters) can be escaped with a backslash, although the
+instances in which you would need to do this are quite rare.
+
+`//` starts a comment, which lasts until the end of the line.
+
+### Patterns
+
+Most lines that don't start with `-`, `#`, or a bracket are normal patterns. Each line represents
+a single pattern.
+
+To represent a pattern iota, write the name of a pattern literally. This can be either the name
+found directly in the Hex Notebook, or the shortened id name used internally by Hex Casting.
+The list of patterns, along with their full and id names, is available in this spreadsheet:
+https://object-object.github.io/HexBug/patterns.csv
+
+Sometimes minor discrepancies occur between the names in the spreadsheet and the Hex Notebook,
+especially for minor details like apostrophes. When in doubt, the spreadsheet is correct, because
+that is what this program uses internally.
+
+The spreadsheet in this project might be out of date. If so, please file an issue on this
+repository.
+
+#### More details
+
+If you add parentheses after a pattern name, the pattern name will be ignored and whatever was
+inside the parentheses will be treated as the pattern angles. This can be used to represent any
+patttern if it is unavailable for some reason.
+
+For example:
+```
+True Reflection (dedq) // The spell ignores "True Reflection" and casts dedq, which represents "False Reflection"
+True Reflection (SOUTH_WEST_dedq) // Optionally specifiy direction
+```
+
+This is currently required for Great Spells, which have a different pattern every world.
+
+There is special handling for `Numerical Reflection` and `Bookkeeper's Gambit`:
+- If you write `Numerical Reflection: 6` or `number: 6`, then it will add the pattern needed to
+put the number `6` on to the stack. This only works for a very small set of numbers, so most numbers
+will need to be specified manually with parentheses.
+- If you write `Bookkeeper's Gambit: vv--` or `mask: vv--` will drop the 3rd and 4th elements of the
+stack, as normal. You can use any combination of `v` and `-` like a normal `Bookkeeper's Gambit`.
