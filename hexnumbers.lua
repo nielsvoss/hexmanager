@@ -1,10 +1,6 @@
 HexNumbers = {}
 
 local number_table = {
-    -- TODO: Remove negatives from the table and just flip the first 4 angles on positives
-    [-2] = 'deddwa',
-    [-1] = 'deddw',
-    [-1/2] = 'deddwd',
     [0] = 'aqaa',
     [1/8] = 'aqaawdaddadd',
     [1/4] = 'aqaawdd',
@@ -61,10 +57,15 @@ local function get_angles(number_as_string)
     if not number then
         return nil
     end
+    local is_negative = number < 0
+    number = math.abs(number)
 
     for key,angles in pairs(number_table) do
         local tolerance = 0.00000001
         if math.abs(number - key) <= tolerance then
+            if is_negative then
+                return angles:gsub('^aqaa', 'dedd', 1)
+            end
             return angles
         end
     end
